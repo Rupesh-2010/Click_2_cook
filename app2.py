@@ -12,7 +12,12 @@ genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 model = genai.GenerativeModel('gemini-1.5-flash')
 
 # Function to get Gemini API response
-
+def get_gemini_response(prompt, image_bytes):
+    try:
+        response = model.generate_content([prompt, image_bytes])
+        return response.text
+    except Exception as e:
+        return f"Error: {str(e)}"
 
 # Function to process uploaded image into bytes
 def input_image(uploaded_file):
@@ -28,7 +33,7 @@ def input_image(uploaded_file):
 
 # Streamlit UI Setup
 st.set_page_config(page_title="Recipe Generator", page_icon="🍳", layout="wide")
-st.title("🍽️ Click_2_Cook")
+st.title("🍽 Click_2_Cook")
 st.markdown("---")
 
 # Layout Design with Columns
@@ -58,9 +63,10 @@ with col1:
 system_prompt = """
 You are a food image recognition and recipe generation assistant. Your goal is to analyze an image of a prepared dish and:
 
-1. **Identify the main ingredients and their quantities.**
-2. **Suggest a recipe for the dish based on the identified ingredients.**
-3. **Consider the user's dietary preferences, allergies, or any additional information provided.**
+1. *Identify the main ingredients and their quantities.*
+2. *Suggest a recipe for the dish based on the identified ingredients.*
+3. *Consider the user's dietary preferences, allergies, or any additional information provided.*
+4. *Also tell the amount of carbohydrate, protein as well as vitamins present in percentage.*
 
 Use your knowledge of food identification, recipe databases, and dietary restrictions to provide accurate and helpful suggestions. Be informative, engaging, and offer variations or substitutions when possible.
 """
@@ -88,11 +94,11 @@ with col2:
     else:
         # Show warning only if the "Generate Recipe Below" button was clicked but no image was uploaded
         if submit:
-            st.warning("⚠️ Please upload an image first to generate a recipe.")
+            st.warning("⚠ Please upload an image first to generate a recipe.")
 
 # Footer Section
 st.markdown("---")
 st.markdown(
-    "<h6 style='text-align: center; color: grey;'>Built with ❤️ by Click_2_cook team | 2024</h6>", 
+    "<h6 style='text-align: center; color: grey;'>Built with ❤ by Click_2_Cook team | 2024</h6>", 
     unsafe_allow_html=True
 )
