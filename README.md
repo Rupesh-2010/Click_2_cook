@@ -5,7 +5,7 @@
 
 Click_2_Cook uses advanced generative AI to analyze your food pictures and give you detailed step-by-step recipes — perfect for cooks, foodies, and curious developers alike. 🍽️🤖
 
----
+--
 
 ## 🚀 Demo
 
