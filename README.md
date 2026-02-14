@@ -16,7 +16,7 @@ Click_2_Cook uses advanced generative AI to analyze your food pictures and give 
 
 ## 🧠 Why Click_2_Cook?
 
-Modern cooking apps show recipes — but what if *you already have a photo of the dish*? This app fills the gap:  
+Modern cooking apps show recipes — but what if *you already have a photo of the dish.*? This app fills the gap:  
 ✔️ Takes a **photo of food** as input  
 ✔️ Uses **Google’s Generative AI** to understand the dish  
 ✔️ Outputs **recipe steps, ingredients, and tips**  
