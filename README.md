@@ -39,7 +39,7 @@ Whether you want to replicate an Instagram dish or just learn something new, Cli
 
 ## 📥 Installation & Setup
 
-Follow these steps to run Click_2_Cook locally:
+Follow these steps to run Click_2_Cook locally-
 
 ```bash
 # Clone repository
