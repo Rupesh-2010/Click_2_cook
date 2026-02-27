@@ -102,3 +102,4 @@ st.markdown(
     "<h6 style='text-align: center; color: grey;'>Built with ❤ by Click_2_Cook team | 2024</h6>", 
     unsafe_allow_html=True
 )
+#Rupesh Desai
