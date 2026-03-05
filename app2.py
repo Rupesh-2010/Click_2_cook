@@ -1,105 +1,99 @@
-from dotenv import load_dotenv
 import os
+from pathlib import Path
+from dotenv import load_dotenv
 from PIL import Image
 import streamlit as st
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 
-# Load environment variables
-load_dotenv()
+# Force load .env from same folder as app2.py
+env_path = Path(__file__).resolve().parent / ".env"
+load_dotenv(env_path)
 
-# Configure Google Generative AI
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-model = genai.GenerativeModel('gemini-1.5-flash')
+print("DEBUG API:", os.getenv("GOOGLE_API_KEY"))
 
-# Function to get Gemini API response
-def get_gemini_response(prompt, image_bytes):
-    try:
-        response = model.generate_content([prompt, image_bytes])
-        return response.text
-    except Exception as e:
-        return f"Error: {str(e)}"
+# Read API Key
+API_KEY = os.getenv("GOOGLE_API_KEY")
 
-# Function to process uploaded image into bytes
-def input_image(uploaded_file):
-    if uploaded_file is not None:
-        bytes_data = uploaded_file.getvalue()
-        image_parts = {
-            "mime_type": uploaded_file.type,
-            "data": bytes_data
-        }
-        return image_parts
-    else:
-        raise FileNotFoundError("No image uploaded.")
+if not API_KEY:
+    st.error("API KEY NOT FOUND. Add GOOGLE_API_KEY in Streamlit Secrets.")
+    st.stop()
 
-# Streamlit UI Setup
-st.set_page_config(page_title="Recipe Generator", page_icon="🍳", layout="wide")
+# Configure Gemini
+client = genai.Client(api_key=API_KEY)
+
+# ---------------- GEMINI FUNCTION ----------------
+
+def get_gemini_response(prompt, uploaded_file):
+
+    image_bytes = uploaded_file.getvalue()
+
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=[
+            prompt,
+            types.Part.from_bytes(
+                data=image_bytes,
+                mime_type=uploaded_file.type
+            ),
+        ],
+    )
+
+    return response.candidates[0].content.parts[0].text
+
+# ---------------- STREAMLIT UI ----------------
+st.set_page_config(page_title="Click_2_Cook", page_icon="🍳", layout="wide")
+
 st.title("🍽 Click_2_Cook")
 st.markdown("---")
 
-# Layout Design with Columns
 col1, col2 = st.columns([1, 2])
 
-# Left Section - Image Upload and Submission
+# LEFT SIDE
 with col1:
     st.subheader("📤 Upload Your Image")
+
     uploaded_file = st.file_uploader(
-        "Upload an image of a dish or invoice (JPG, JPEG, PNG, WEBP):", 
-        type=['jpg', 'jpeg', 'png', 'webp']
+        "Upload a food image (JPG, JPEG, PNG, WEBP)",
+        type=["jpg", "jpeg", "png", "webp"]
     )
 
-    # Display "Generate Recipe Above" button only after image is uploaded
-    if uploaded_file:
-        generate_button = st.button("🚀 Generate Recipe", key="generate_btn_top", use_container_width=True)
-
-    # Display uploaded image
     if uploaded_file:
         image = Image.open(uploaded_file)
-        st.image(image, caption="✅ Uploaded Image", use_column_width=True)
+        st.image(image, caption="Uploaded Image", use_container_width=True)
 
-    # Submit Button with styling below the image
-    submit = st.button("🚀 Generate Recipe", key="submit_btn", use_container_width=True)
+        submit = st.button("🚀 Generate Recipe", use_container_width=True)
 
-# System Prompt
+
+# PROMPT
 system_prompt = """
-You are a food image recognition and recipe generation assistant. Your goal is to analyze an image of a prepared dish and:
+You are a food image recognition and recipe generation assistant.
 
-1. *Identify the main ingredients and their quantities.*
-2. *Suggest a recipe for the dish based on the identified ingredients.*
-3. *Consider the user's dietary preferences, allergies, or any additional information provided.*
-4. *Also tell the amount of carbohydrate, protein as well as vitamins present in percentage.*
-
-Use your knowledge of food identification, recipe databases, and dietary restrictions to provide accurate and helpful suggestions. Be informative, engaging, and offer variations or substitutions when possible.
+1. Identify the food item.
+2. List ingredients with estimated quantities.
+3. Provide full step-by-step recipe.
+4. Provide nutrition: carbs, protein, vitamins percentage.
+5. If image is not food, politely say no food detected.
 """
 
-# Right Section - Output or Response
+
+# RIGHT SIDE
 with col2:
-    st.subheader("🍴 Recipe Suggestions:")
+    st.subheader("🍴 Recipe Suggestions")
 
-    # Handle both Generate Recipe buttons
-    if uploaded_file:
-        if generate_button or submit:
-            with st.spinner("⏳ Analyzing the image and generating your recipe..."):
-                image_data = input_image(uploaded_file)  # Convert to bytes
-                response = get_gemini_response(system_prompt, image_data)
+    if uploaded_file and submit:
+        with st.spinner("Analyzing food..."):
+            try:
+                response = get_gemini_response(system_prompt, uploaded_file)
 
-            # Check if response contains food-related information or an apology
-            if response and "Error" not in response:
-                if "ingredient" in response.lower() or "recipe" in response.lower():
-                    st.success("🎉 Here's the result!")
-                    st.write(response)
-                else:
-                    st.error("❌ Apologize, no food item present in the image.")
-            else:
-                st.error(f"❌ Failed to generate a response. Error: {response}")
-    else:
-        # Show warning only if the "Generate Recipe Below" button was clicked but no image was uploaded
-        if submit:
-            st.warning("⚠ Please upload an image first to generate a recipe.")
+                st.success("Recipe Generated!")
+                st.write(response)
 
-# Footer Section
+            except Exception as e:
+                st.error(f"Error: {e}")
+
 st.markdown("---")
 st.markdown(
-    "<h6 style='text-align: center; color: grey;'>Built with ❤ by Click_2_Cook team | 2024</h6>", 
+    "<h6 style='text-align: center; color: grey;'>Built with ❤ by Rupesh Desai</h6>",
     unsafe_allow_html=True
 )
-#Rupesh Desai
