@@ -112,17 +112,57 @@ The system combines image understanding + language generation to create recipes 
 ## 📷 Application Screenshots
 
 
-🏠 Homepage
-📂 Upload Image
-📤 Uploaded Image
-⚙ Processing Recipe
-📋 Generated Recipe
-🍛 Multiple Dish Detection
-🍎 Raw Ingredient Image
-🤖 AI Generated Output
-📊 Example Output
+- ### 🏠 Homepage
 
-## Example AI response:
+![Homepage](SS/homepage.jpg)
+
+
+- ### 📂 Upload Image
+
+![Upload](SS/upload_image.jpg)
+
+
+- ### 📤 Uploaded Image
+
+![Uploaded](SS/uploaded_image.jpg)
+
+
+- ### ⚙ Processing Recipe
+
+![Uploaded](SS/generated_recipe.jpg)
+
+
+- ### 📋 Generated Recipe
+
+![Uploaded](SS/Result_R1.jpg)
+
+
+- ### 🍛 Multiple Dish Detection
+
+![Uploaded](SS/U2.jpg)
+
+
+- ### 🤖 AI Generated Output
+
+  
+- ![Uploaded](SS/R1.jpg)
+- ![Uploaded](SS/R2.jpg)
+- ![Uploaded](SS/R3.jpg)
+- ![Uploaded](SS/R4.jpg)
+- ![Uploaded](SS/R5.jpg)
+- ![Uploaded](SS/R6.jpg)
+
+
+
+- ### 📊 Example Output
+
+![Uploaded](SS/U3.jpg)
+
+  
+- ### Example AI response:
+
+![Uploaded](SS/R7.jpg)
+
 
 ### Ingredient identification
 
