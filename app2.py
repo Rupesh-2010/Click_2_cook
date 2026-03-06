@@ -94,6 +94,6 @@ with col2:
 
 st.markdown("---")
 st.markdown(
-    "<h6 style='text-align: center; color: grey;'>Built with ❤ by Rupesh Desai</h6>",
+    "<h6 style='text-align: center; color: grey;'>Built with ❤️ by Rupesh Desai</h6>",
     unsafe_allow_html=True
 )
